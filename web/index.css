@@ -1,0 +1,21 @@
+.gameObject {
+    position: absolute;
+    transition: all 0.3s ease-in-out;
+}
+html,body { height: 100%;}
+body {
+    overflow: hidden;
+}
+body.notLogged {
+    background-color: #EEE;
+}
+#login {
+    background-color: white;
+    width: 200px;
+    box-shadow: 2px 4px 30px #777;
+    margin: 20% auto;
+    padding: 40px;
+}
+#login.hidden {
+    display: none;
+}
