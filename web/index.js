@@ -1,5 +1,8 @@
 'use strict';
 
+var myFirebaseRef = new Firebase("https://firefighters.firebaseio.com/");
+
+
 const tileSize = 128;
 
 var viewPort = {
@@ -40,12 +43,49 @@ function login() {
 
 let player;
 function start(name) {
-    player = new Player(name);
-    for (let i=0;i<40;i++) {
-        var o = new GameObject(fireElement);
-        o.setPosition((Math.random()*20-10)|0,(Math.random()*20-10)|0);
-    }
-    document.addEventListener('keyup', keyUp);
+    document.addEventListener('keydown', keyUp);
+    var players = myFirebaseRef.child("players");
+
+    var me = players.push();
+    me.set({name:name});
+    window.addEventListener('unload', function() {
+        me.set(null);
+    });
+
+    players.on("child_added", function(snapshot) {
+        var newPlayer = snapshot.val();
+        var key = snapshot.key();
+        if (key==me.key()) {
+            player = new MainPlayer(newPlayer.name);
+            player.setPosition = function(c,r) {
+                me.update({c:c,r:r});
+                MainPlayer.prototype.setPosition.call(player,c,r);
+            }
+        } else {
+            var p = new Player(newPlayer.name);
+            p.key = key;
+            p.setPosition(newPlayer.c,newPlayer.r);
+        }
+    });
+    players.on("child_changed", function(snapshot) {
+        let key = snapshot.key();
+        if (key == me.key()) return;
+        var o = objects.find((o) => o.key == key);
+        if (o!=null) {
+            let val = snapshot.val();
+            o.setPosition(val.c,val.r);
+        }
+    });
+    players.on('child_removed', function(snapshot) {
+        let key = snapshot.key();
+        let idx = objects.findIndex((o)=> o.key==key);
+        if (idx>=0) {
+            objects[idx].dispose();
+            objects.splice(idx,1);
+        }
+    });
+
+
 }
 function keyUp(e) {
     switch(e.keyCode) {
@@ -65,6 +105,11 @@ function GameObject(element) {
     this.setPosition(0, 0);
     objects.push(this);
 }
+
+GameObject.prototype.dispose = function() {
+    this.element.parentNode.removeChild(this.element);
+};
+
 
 GameObject.prototype.setPosition = function (c, r) {
     this.c = c;this.r = r;
@@ -91,8 +136,15 @@ function Player(title) {
 Player.prototype = Object.create(GameObject.prototype);
 Player.prototype.constructor = GameObject;
 
-Player.prototype.updateStyle = function () {
-    GameObject.prototype.updateStyle.call(this);
+function MainPlayer(title) {
+    Player.call(this,title);
+    this.element.classList.add('main');
+}
+MainPlayer.prototype = Object.create(Player.prototype);
+MainPlayer.prototype.constructor = Player;
+
+MainPlayer.prototype.updateStyle = function () {
+    Player.prototype.updateStyle.call(this);
     var oh = viewPort.dc+viewPort.dr;
     if ( (this.c+viewPort.dc)*tileSize>window.innerWidth>>1) viewPort.dc-=4;
     if ( (this.c+viewPort.dc)*tileSize<-window.innerWidth>>1) viewPort.dc+=4;
@@ -102,3 +154,4 @@ Player.prototype.updateStyle = function () {
         objects.forEach((o) => o.updateStyle());
     }
 };
+
