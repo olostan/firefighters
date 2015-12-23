@@ -4,7 +4,8 @@
   "description": "Fire Daemon",
   "main": "index.js",
   "scripts": {
-    "deploy": "gcloud preview app deploy app.yaml"
+    "deploy": "gcloud preview app deploy app.yaml",
+    "start": "node app.js"
   },
   "author": "Valentyn Shybanov",
   "license": "ISC",
