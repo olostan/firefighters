@@ -22,3 +22,11 @@ body.notLogged {
 #login.hidden {
     display: none;
 }
+#status {
+    position:fixed;
+    width: 100%;padding:10px;
+    left:0;top:0;
+    background-color: rgba(200,200,200,0.7);
+    box-shadow: 1px 1px 30px #777;
+    z-index: 200;
+}

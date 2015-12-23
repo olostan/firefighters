@@ -1,0 +1,46 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/vshybanov/.nvm/versions/node/v5.2.0/bin/node',
+1 verbose cli   '/Users/vshybanov/.nvm/versions/node/v5.2.0/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'deploy' ]
+2 info using npm@3.3.12
+3 info using node@v5.2.0
+4 verbose run-script [ 'predeploy', 'deploy', 'postdeploy' ]
+5 info lifecycle fire@1.0.0~predeploy: fire@1.0.0
+6 silly lifecycle fire@1.0.0~predeploy: no script for predeploy, continuing
+7 info lifecycle fire@1.0.0~deploy: fire@1.0.0
+8 verbose lifecycle fire@1.0.0~deploy: unsafe-perm in lifecycle true
+9 verbose lifecycle fire@1.0.0~deploy: PATH: /Users/vshybanov/.nvm/versions/node/v5.2.0/lib/node_modules/npm/bin/node-gyp-bin:/Users/vshybanov/code/js/firefighters/fire/node_modules/.bin:/Users/vshybanov/google-cloud-sdk/bin:/Users/vshybanov/.nvm/versions/node/v5.2.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/vshybanov/code/go_appengine:/Users/vshybanov/dart/dart-sdk/bin:/Users/vshybanov/.pub-cache/bin:/Users/vshybanov/.nvm/versions/node/v4.1.0/bin:/Users/vshybanov/code/java/gradle/bin:/Users/vshybanov/code/java/maven/bin
+10 verbose lifecycle fire@1.0.0~deploy: CWD: /Users/vshybanov/code/js/firefighters/fire
+11 silly lifecycle fire@1.0.0~deploy: Args: [ '-c', 'gcloud preview app deploy app.yaml' ]
+12 silly lifecycle fire@1.0.0~deploy: Returned: code: 1  signal: null
+13 info lifecycle fire@1.0.0~deploy: Failed to exec deploy script
+14 verbose stack Error: fire@1.0.0 deploy: `gcloud preview app deploy app.yaml`
+14 verbose stack Exit status 1
+14 verbose stack     at EventEmitter.<anonymous> (/Users/vshybanov/.nvm/versions/node/v5.2.0/lib/node_modules/npm/lib/utils/lifecycle.js:232:16)
+14 verbose stack     at emitTwo (events.js:88:13)
+14 verbose stack     at EventEmitter.emit (events.js:173:7)
+14 verbose stack     at ChildProcess.<anonymous> (/Users/vshybanov/.nvm/versions/node/v5.2.0/lib/node_modules/npm/lib/utils/spawn.js:24:14)
+14 verbose stack     at emitTwo (events.js:88:13)
+14 verbose stack     at ChildProcess.emit (events.js:173:7)
+14 verbose stack     at maybeClose (internal/child_process.js:819:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:212:5)
+15 verbose pkgid fire@1.0.0
+16 verbose cwd /Users/vshybanov/code/js/firefighters/fire
+17 error Darwin 15.2.0
+18 error argv "/Users/vshybanov/.nvm/versions/node/v5.2.0/bin/node" "/Users/vshybanov/.nvm/versions/node/v5.2.0/bin/npm" "run" "deploy"
+19 error node v5.2.0
+20 error npm  v3.3.12
+21 error code ELIFECYCLE
+22 error fire@1.0.0 deploy: `gcloud preview app deploy app.yaml`
+22 error Exit status 1
+23 error Failed at the fire@1.0.0 deploy script 'gcloud preview app deploy app.yaml'.
+23 error Make sure you have the latest version of node.js and npm installed.
+23 error If you do, this is most likely a problem with the fire package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     gcloud preview app deploy app.yaml
+23 error You can get their info via:
+23 error     npm owner ls fire
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]

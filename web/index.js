@@ -44,45 +44,53 @@ function login() {
 let player;
 function start(name) {
     document.addEventListener('keydown', keyUp);
-    var players = myFirebaseRef.child("players");
+    var objectsRef = myFirebaseRef.child("objects");
 
-    var me = players.push();
-    me.set({name:name});
+    var me = objectsRef.push();
+    me.set({name:name,c:0,r:0,type:'player'});
     window.addEventListener('unload', function() {
         me.set(null);
     });
 
-    players.on("child_added", function(snapshot) {
-        var newPlayer = snapshot.val();
+    objectsRef.on("child_added", function(snapshot) {
+        var newObject = snapshot.val();
         var key = snapshot.key();
         if (key==me.key()) {
-            player = new MainPlayer(newPlayer.name);
+            player = new MainPlayer(newObject.name);
             player.setPosition = function(c,r) {
                 me.update({c:c,r:r});
                 MainPlayer.prototype.setPosition.call(player,c,r);
             }
         } else {
-            var p = new Player(newPlayer.name);
+            var p = newObject.type=='player'?new Player(newObject.name):new GameObject(fireElement);
             p.key = key;
-            p.setPosition(newPlayer.c,newPlayer.r);
+            p.type = newObject.type;
+            p.setPosition(newObject.c,newObject.r);
         }
+        updateStatus();
     });
-    players.on("child_changed", function(snapshot) {
+    objectsRef.on("child_changed", function(snapshot) {
         let key = snapshot.key();
-        if (key == me.key()) return;
+        if (key == me.key()) {
+            player.score = snapshot.val().score;
+        }
         var o = objects.find((o) => o.key == key);
         if (o!=null) {
             let val = snapshot.val();
+            if (val.s) o.s = val.s;
+            if (val.score) o.score = val.score;
             o.setPosition(val.c,val.r);
         }
+        updateStatus();
     });
-    players.on('child_removed', function(snapshot) {
+    objectsRef.on('child_removed', function(snapshot) {
         let key = snapshot.key();
         let idx = objects.findIndex((o)=> o.key==key);
         if (idx>=0) {
             objects[idx].dispose();
             objects.splice(idx,1);
         }
+        updateStatus();
     });
 
 
@@ -120,10 +128,12 @@ GameObject.prototype.updateStyle = function () {
     let cy = (window.innerHeight>>1) - tileSize/2;
     var tx = (this.c+viewPort.dc)*tileSize+cx;
     var ty = (this.r+viewPort.dr)*tileSize+cy;
-    this.element.style.transform = `translate(${tx}px, ${ty}px`;
+    if (this.s) { this.element.style.opacity = this.s/3;}
+    this.element.style.transform = `translate(${tx}px, ${ty}px) scale(${this.s?this.s/3:1})`;
 };
 
 function Player(title) {
+    this.name = title;
     GameObject.call(this,playerElement);
     const width = 110;
     var textNode = this.element.querySelector('.title');
@@ -139,6 +149,7 @@ Player.prototype.constructor = GameObject;
 function MainPlayer(title) {
     Player.call(this,title);
     this.element.classList.add('main');
+    this.score = 0;
 }
 MainPlayer.prototype = Object.create(Player.prototype);
 MainPlayer.prototype.constructor = Player;
@@ -153,5 +164,11 @@ MainPlayer.prototype.updateStyle = function () {
     if (viewPort.dc+viewPort.dr != oh) {
         objects.forEach((o) => o.updateStyle());
     }
+    updateStatus();
 };
 
+function updateStatus() {
+    if (!player) return;
+    document.getElementById('status').innerText =
+        `Player name ${player.name}. Position: ${player.c}x${player.r}. Fires: ${objects.filter((o) => o.type == 'fire').length}. Score:${player.score}`;
+}
