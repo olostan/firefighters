@@ -62,3 +62,10 @@ function fireTick(fire) {
 function playerNear(c,r) {
     return objects.filter((o) => o.type=='player' && o.c>=c-1 && o.c<=c+1 && o.r>=r-1 && o.r<=r+1);
 }
+
+var http = require('http');
+
+http.createServer(function (req, res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end("Nice to see you, but this server does not serve http requests");
+}).listen(process.env.PORT || 8080);
