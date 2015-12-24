@@ -5,12 +5,11 @@ const tileSize = 128;
 var viewPort = {
     dc: 0, dr: 0
 };
-let playerElement = undefined;
-let fireElement = undefined;
-let objects = [];
+var playerElement = undefined;
+var fireElement = undefined;
+var objects = [];
 
 prepareFireElement().then(preparePlayerElement).then(prepareLogin);
-
 
 function preparePlayerElement() {
     return window.fetch('assets/pcman.svg').then((r) => r.text()).then((t) => {
@@ -29,7 +28,6 @@ function prepareLogin() {
     document.querySelector('#login button').addEventListener('click', login);
     document.querySelector('#login input').addEventListener('keyup', (e) => e.keyCode==13?login():false);
     document.querySelector('#login input').focus();
-
 }
 function login() {
     var name = document.querySelector('#login input').value;
@@ -38,10 +36,10 @@ function login() {
     start(name);
 }
 
-let player;
+var player;
 function start(name) {
     player = new Player(name);
-    for (let i=0;i<40;i++) {
+    for (var i=0;i<40;i++) {
         var o = new GameObject(fireElement);
         o.setPosition((Math.random()*20-10)|0,(Math.random()*20-10)|0);
     }
@@ -71,8 +69,8 @@ GameObject.prototype.setPosition = function (c, r) {
     this.updateStyle();
 };
 GameObject.prototype.updateStyle = function () {
-    let cx = (window.innerWidth>>1) - tileSize/2;
-    let cy = (window.innerHeight>>1) - tileSize/2;
+    var cx = (window.innerWidth>>1) - tileSize/2;
+    var cy = (window.innerHeight>>1) - tileSize/2;
     var tx = (this.c+viewPort.dc)*tileSize+cx;
     var ty = (this.r+viewPort.dr)*tileSize+cy;
     this.element.style.transform = `translate(${tx}px, ${ty}px`;
@@ -86,7 +84,6 @@ function Player(title) {
     var bb = textNode.getBBox();
     var widthTransform = width / bb.width;
     textNode.setAttribute("transform", "matrix("+widthTransform+", 0, 0, 1, 0,0)");
-
 }
 Player.prototype = Object.create(GameObject.prototype);
 Player.prototype.constructor = GameObject;
@@ -102,3 +99,4 @@ Player.prototype.updateStyle = function () {
         objects.forEach((o) => o.updateStyle());
     }
 };
+
